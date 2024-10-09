@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FoodItem {
@@ -16,6 +17,7 @@ public class FoodItem {
         this.name = name;
         this.description = description;
         this.price = price;
+        this.comments = new ArrayList<>();
     }
 
     public String getName() {
@@ -40,6 +42,15 @@ public class FoodItem {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public void addComment(String comment) {
+        if (comment != null && !comment.trim().isEmpty()) {  // 确保评论非空且不为null
+            comments.add(comment);
+            System.out.println("Comment added: " + comment);
+        } else {
+            System.out.println("Cannot add an empty or null comment.");
+        }
     }
 
     public List<String> getComments() {
