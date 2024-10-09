@@ -49,6 +49,8 @@ public class TestFoodItem {
         assertEquals(39.99, testFoodItem1.getPrice(), 0.01);
     }
 
+    //The three tests below also tested the getComments method!
+
     @Test
     void TestAddValidComment() {
         testFoodItem1.addComment("Nice! I like it!");
@@ -58,6 +60,29 @@ public class TestFoodItem {
         assertEquals(2, testComments1.size());
         assertTrue(testComments1.contains("Nice! I like it!"));
         assertTrue(testComments1.contains("It's a bad experience!"));
+    }
+
+    @Test
+    void TestNullComment() {
+        testFoodItem1.addComment(null);
+        List<String> testComments1 = testFoodItem1.getComments();
+        assertTrue(testComments1.isEmpty());
+    }
+
+    @Test
+    void TestEmptyComment() {
+        testFoodItem1.addComment("");
+        List<String> testComments1 = testFoodItem1.getComments();
+        assertTrue(testComments1.isEmpty());
+
+        testFoodItem2.addComment("  ");
+        List<String> testComments2 = testFoodItem2.getComments();
+        assertTrue(testComments2.isEmpty());
+    }
+
+    @Test
+    void TestDisPlayInfo() {
+        
     }
 
 

@@ -8,10 +8,7 @@ public class FoodItem {
     private String description;
     private double price;
     private List<String> comments;
-
-    public FoodItem() {
-
-    }
+    
 
     public FoodItem(String name, String description, double price) {
         this.name = name;
