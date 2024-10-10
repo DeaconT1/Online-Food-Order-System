@@ -30,14 +30,21 @@ public class Order {
         return new ArrayList<>(orderedItems);  
     }
 
+    // EFFECTS: return the total FoodItem
     public int getItemCount() {
         return orderedItems.size();
     }
 
+    // REQUIRES: !orderedItems.isEmpty()
+    // MODIFIES: this
+    // EFFECTS: remove all the FoodItem in the current order
     public void clearOrder() {
         orderedItems.clear();
     }
 
+    // REQUIRES: item != null
+    // EFFECTS: return true if the current ordered items contain the item
+    //          otherwise false
     public boolean containsFoodItem(FoodItem item) {
         return orderedItems.contains(item);
     }

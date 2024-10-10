@@ -21,8 +21,10 @@ public class QuickBiteApp {
         initializeMenu();             
         currentOrder = new Order();   
         scanner = new Scanner(System.in);  
-    }
+    }   
 
+    // MODIFIES: this.menu
+    // EFFECTS: Initializes the menu with predefined food items.
     private void initializeMenu() {
         menu = new ArrayList<>();
         menu.add(new FoodItem("MoonCake", "Traditional Chinese food for celebrating mid-autumn festival", 9.99));
@@ -32,6 +34,8 @@ public class QuickBiteApp {
         menu.add(new FoodItem("Salad", "Fresh garden salad", 5.99));
     }
 
+    // MODIFIES: this.menu
+    // EFFECTS: Initializes the menu with predefined food items.
     public void run() {
         System.out.println("\nWelcome to QuickBite! 🍚🍔🍣");
         boolean keepRunning = true;
@@ -69,6 +73,7 @@ public class QuickBiteApp {
         }
     }
 
+    // EFFECTS: Displays the main menu options in the console.
     private void displayMainMenu() {
         System.out.println("\nMain Menu:");
         System.out.println("1. Browse Menu");
@@ -81,7 +86,7 @@ public class QuickBiteApp {
         System.out.print("Please enter your choice: ");
     }
 
-    // show the menu
+    // EFFECTS: Displays all items in the menu along with their description and price.
     private void displayMenu() {
         System.out.println("\nMenu:");
         for (int i = 0; i < menu.size(); i++) {
@@ -91,7 +96,9 @@ public class QuickBiteApp {
         }
     }
 
-    // add food item into the order
+    // REQUIRES: User input must be a valid item number present in the menu.
+    // MODIFIES: this.currentOrder
+    // EFFECTS: Adds the selected food item from the menu to the current order.
     private void addItemToOrder() {
         displayMenu();  // this method will first display the menu
         System.out.print("Enter the number of the item you want to add to your order: ");
@@ -106,7 +113,8 @@ public class QuickBiteApp {
         }
     }
 
-    // for display the order info
+    // EFFECTS: Displays all items currently in the order along with their description and price. 
+    //          Shows the total cost of the order.  
     private void displayOrder() {
         List<FoodItem> orderedItems = currentOrder.getOrderedItems();
 
@@ -123,7 +131,9 @@ public class QuickBiteApp {
         }
     }
 
-    // remove Item from the current order
+    // REQUIRES: User input must be a valid item number present in the current order.
+    // MODIFIES: this.currentOrder
+    // EFFECTS: Removes the specified item from the current order.
     private void removeItemFromOrder() {
         displayOrder();  // first it will display the current order
         if (currentOrder.getItemCount() == 0) {
@@ -142,11 +152,15 @@ public class QuickBiteApp {
         }
     }
 
+    // MODIFIES: this.currentOrder
+    // EFFECTS: Clears all items from the current order.
     private void clearOrder() {
         currentOrder.clearOrder();
         System.out.println("Your order has been cleared.");
     }
 
+    //MODIFIES: this.currentOrder
+    // EFFECTS: Displays the total amount of the order and clears the current order after placing it.
     private void placeOrder() {
     System.out.printf("Your order has been successfully placed! Total amount: $%.2f\n", currentOrder.countTotal());
     System.out.println("Thank you for your order! Your order is now being prepared. 🍽️");
