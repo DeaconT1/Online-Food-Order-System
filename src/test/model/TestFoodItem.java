@@ -1,9 +1,7 @@
 package model;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -49,41 +47,40 @@ public class TestFoodItem {
         assertEquals(39.99, testFoodItem1.getPrice(), 0.01);
     }
 
-    //The three tests below also tested the getComments method!
-
     @Test
-    void TestAddValidComment() {
-        testFoodItem1.addComment("Nice! I like it!");
-        testFoodItem1.addComment("It's a bad experience!");
-        List<String> testComments1 = testFoodItem1.getComments();
-
-        assertEquals(2, testComments1.size());
-        assertTrue(testComments1.contains("Nice! I like it!"));
-        assertTrue(testComments1.contains("It's a bad experience!"));
+    void TestIncreasePrice() {
+        testFoodItem1.increasePrice(3.01);
+        assertEquals(6.0, testFoodItem1.getPrice(), 0.01);
+        testFoodItem2.increasePrice(7.98);
+        assertEquals((8.99 + 7.98), testFoodItem2.getPrice(), 0.01);
     }
 
     @Test
-    void TestNullComment() {
-        testFoodItem1.addComment(null);
-        List<String> testComments1 = testFoodItem1.getComments();
-        assertTrue(testComments1.isEmpty());
+    void TestDecreasePrice() {
+        testFoodItem1.decreasePrice(1.01);
+        assertEquals(1.98, testFoodItem1.getPrice(), 0.01);
+        testFoodItem2.decreasePrice(7.98);
+        assertEquals(1.01, testFoodItem2.getPrice(), 0.01);
     }
 
     @Test
-    void TestEmptyComment() {
-        testFoodItem1.addComment("");
-        List<String> testComments1 = testFoodItem1.getComments();
-        assertTrue(testComments1.isEmpty());
-
-        testFoodItem2.addComment("  ");
-        List<String> testComments2 = testFoodItem2.getComments();
-        assertTrue(testComments2.isEmpty());
+    void TestAddAndGetComment() {
+        testFoodItem1.addComment("I like it!!");
+        assertEquals(1, testFoodItem1.getComments().size());
+        assertEquals("I like it!!", testFoodItem1.getComments().get(0));
+        testFoodItem1.addComment("I hate it!!");
+        assertEquals(2, testFoodItem1.getComments().size());
+        assertEquals("I hate it!!", testFoodItem1.getComments().get(1));
     }
 
     @Test
-    void TestDisPlayInfo() {
-        
-    }
-
-
+    void TestRemoveComment() {
+        testFoodItem1.addComment("I like it!!");
+        assertEquals(1, testFoodItem1.getComments().size());
+        assertEquals("I like it!!", testFoodItem1.getComments().get(0));
+        testFoodItem1.removeComment("I like it!!");
+        assertEquals(0, testFoodItem1.getComments().size());
+        }
 }
+
+

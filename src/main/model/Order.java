@@ -11,23 +11,37 @@ public class Order {
         this.orderedItems = new ArrayList<>();
     }
 
-    // Requires: item != null
-    // Modifies: this
-    // Effects: add foodItem to the ordered list
+    // REQUIRES: item != null
+    // MODIFIES: this
+    // EFFECTS: add foodItem to the ordered list
     public void addFoodItem(FoodItem item) {
         this.orderedItems.add(item);
-        System.out.println("Added food item to order: " + item.getName());
     }
 
-    // Requires: item != null && !orderedItems.isEmpty() && item in orderedItems
-    // Modifies: this
-    // Effects: remove foodItem in the ordered list
+    // REQUIRES: item != null && !orderedItems.isEmpty() && item in orderedItems
+    // MODIFIES: this
+    // EFFECTS: remove foodItem in the ordered list
     public void removeFoodItem(FoodItem item) {
         this.orderedItems.remove(item);
-        System.out.println("Removed food item in the order" + item.getName());
     }
 
-    // Effects: return the total price of the order
+    public List<FoodItem> getOrderedItems() {
+        return new ArrayList<>(orderedItems);  
+    }
+
+    public int getItemCount() {
+        return orderedItems.size();
+    }
+
+    public void clearOrder() {
+        orderedItems.clear();
+    }
+
+    public boolean containsFoodItem(FoodItem item) {
+        return orderedItems.contains(item);
+    }
+
+    // EFFECTS: return the total price of the order
     public double countTotal() {
         double totalprice = 0;
         for (FoodItem item : orderedItems) {
@@ -35,20 +49,5 @@ public class Order {
         }
         return totalprice;
     }
-
-    public void displayOrder() {
-        if (orderedItems.isEmpty()) {
-            System.out.println("The order is empty.");
-        } else {
-            System.out.println("\n=== Your Order ===");
-            for (int i = 0; i < orderedItems.size(); i++) {
-                FoodItem item = orderedItems.get(i);
-                System.out.printf("%d. %s - $%.2f\n", i + 1, item.getName(), item.getPrice());
-            }
-            System.out.printf("Total Price: $%.2f\n", countTotal());
-        }
-    }
-
-
 
 }
