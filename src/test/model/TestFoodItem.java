@@ -2,8 +2,6 @@ package model;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

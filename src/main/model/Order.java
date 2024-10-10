@@ -25,6 +25,7 @@ public class Order {
         this.orderedItems.remove(item);
     }
 
+    // EFFECTS: return a copy of the orderedItems
     public List<FoodItem> getOrderedItems() {
         return new ArrayList<>(orderedItems);  
     }
