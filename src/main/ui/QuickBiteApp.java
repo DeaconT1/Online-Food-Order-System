@@ -30,12 +30,14 @@ public class QuickBiteApp {
         menu.add(new FoodItem("MoonCake", "Traditional Chinese food for celebrating mid-autumn festival", 9.99));
         menu.add(new FoodItem("Cheese Burger", "Juicy beef cheese burger", 6.49));
         menu.add(new FoodItem("Sushi", "Fresh salmon sushi", 2.99));
-        menu.add(new FoodItem("Kung Pao Chicken", "Spicy Chinese stir-fry with chicken, peanuts, and chili peppers.", 18.99));
+        menu.add(new FoodItem("Kung Pao Chicken", "Spicy Chinese stir-fry with chicken, peanuts, and chili peppers.", 
+                18.99));
         menu.add(new FoodItem("Salad", "Fresh garden salad", 5.99));
     }
 
     // MODIFIES: this.menu
     // EFFECTS: Initializes the menu with predefined food items.
+    @SuppressWarnings("methodlength")
     public void run() {
         System.out.println("\nWelcome to QuickBite! 🍚🍔🍣");
         boolean keepRunning = true;
@@ -162,9 +164,9 @@ public class QuickBiteApp {
     //MODIFIES: this.currentOrder
     // EFFECTS: Displays the total amount of the order and clears the current order after placing it.
     private void placeOrder() {
-    System.out.printf("Your order has been successfully placed! Total amount: $%.2f\n", currentOrder.countTotal());
-    System.out.println("Thank you for your order! Your order is now being prepared. 🍽️");
-    currentOrder.clearOrder();
-}
+        System.out.printf("Your order has been successfully placed! Total amount: $%.2f\n", currentOrder.countTotal());
+        System.out.println("Thank you for your order! Your order is now being prepared. 🍽️");
+        currentOrder.clearOrder();
+    }
 
 }
