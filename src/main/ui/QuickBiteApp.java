@@ -93,7 +93,7 @@ public class QuickBiteApp {
         System.out.println("\nMenu:");
         for (int i = 0; i < menu.size(); i++) {
             FoodItem item = menu.get(i);
-            System.out.printf("%d. %s - $%.2f\n", (i + 1), item.getName(), item.getPrice());
+            System.out.printf("%d. %s - $%.2f\n", (i + 1), item.getName(), item.getPrice()); 
             System.out.println("   Description: " + item.getDescription());
         }
     }
@@ -143,7 +143,7 @@ public class QuickBiteApp {
         }
 
         System.out.print("Enter the number of the item you want to remove from your order: ");
-        int itemNumber = Integer.parseInt(scanner.nextLine()) - 1;
+        int itemNumber = Integer.parseInt(scanner.nextLine()) - 1; //get the user's input and convert into a index number
 
         if (itemNumber >= 0 && itemNumber < currentOrder.getItemCount()) {
             FoodItem item = currentOrder.getOrderedItems().get(itemNumber);

@@ -21,6 +21,10 @@ It addresses a real-world problem that many people, including myself, encounter 
 - As a user, I want to be able to **place** the order.
 - As a user, I want to be able to **check** the delivery status.
 - As a user, I want to be able to **add comment** to a specify food item.
+#### For Phase2:
+- As a user, I want to be able to **save my order** to file(If I so chosse).
+- As a user, I want to be able to **load my previous order** from the file when I reopen the App.
+- As a user, I want to be able to **be reminded** to save the order when I press quit(if the order is not empty).
 
 
 ### `X` and `Y` in this desktop application:
