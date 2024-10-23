@@ -170,7 +170,8 @@ public class QuickBiteApp {
         }
 
         System.out.print("Enter the number of the item you want to remove from your order: ");
-        int itemNumber = Integer.parseInt(scanner.nextLine()) - 1; //get the user's input and convert into a index number
+        int itemNumber = Integer.parseInt(scanner.nextLine()) - 1;
+            //get the user's input and convert into a index number 
 
         if (itemNumber >= 0 && itemNumber < currentOrder.getItemCount()) {
             FoodItem item = currentOrder.getOrderedItems().get(itemNumber);

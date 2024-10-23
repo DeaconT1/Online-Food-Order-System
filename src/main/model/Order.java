@@ -7,7 +7,7 @@ import persistence.Writable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Order implements Writable{
+public class Order implements Writable {
     private List<FoodItem> orderedItems;
 
     // Construct a emtpy order list

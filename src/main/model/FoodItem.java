@@ -7,7 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
 
-public class FoodItem implements Writable{
+public class FoodItem implements Writable {
     private String name;
     private String description;
     private double price;

@@ -24,7 +24,7 @@ public class TestOrder {
     }
 
     @Test
-    void TestConstructor() {
+    void testConstructor() {
         Order order = new Order();
         assertTrue(order.getOrderedItems().isEmpty());
         assertEquals(0, order.getOrderedItems().size());
@@ -88,7 +88,7 @@ public class TestOrder {
     }
 
     @Test
-    void TestcountTotal() {
+    void testcountTotal() {
         //test count single item
         testOrder.addFoodItem(testFoodItem3);
         assertEquals(12.99, testOrder.countTotal());
