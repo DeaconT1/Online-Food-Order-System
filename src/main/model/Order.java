@@ -1,9 +1,13 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Order {
+public class Order implements Writable{
     private List<FoodItem> orderedItems;
 
     // Construct a emtpy order list
@@ -56,6 +60,29 @@ public class Order {
             totalprice += item.getPrice();
         }
         return totalprice;
+    }
+
+    // EFFECTS: return true if empty false otherwise;
+    public boolean isEmpty() {
+        return orderedItems.isEmpty();
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("orderedItems", orderedItemsToJson());
+        return json;
+    }
+
+    // EFFECTS: returns things in this workroom as a JSON array
+    private JSONArray orderedItemsToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (FoodItem item : orderedItems) {
+            jsonArray.put(item.toJson());
+        }
+
+        return jsonArray;
     }
 
 }
