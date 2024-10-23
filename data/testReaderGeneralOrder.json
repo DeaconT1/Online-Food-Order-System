@@ -1,0 +1,15 @@
+{"orderedItems": [
+    {
+        "comments": ["Delicious!!",
+            "Nice~"],
+        "price": 9.99,
+        "name": "MoonCake",
+        "description": "Traditional Chinese food for celebrating mid-autumn festival"
+    },
+    {
+        "comments": [],
+        "price": 2.99,
+        "name": "Sushi",
+        "description": "Fresh salmon sushi"
+    }
+]}

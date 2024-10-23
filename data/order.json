@@ -1,0 +1,17 @@
+{"orderedItems": [
+    {
+        "comments": [
+            "Delicious!!",
+            "Nice~"
+        ],
+        "price": 9.99,
+        "name": "MoonCake",
+        "description": "Traditional Chinese food for celebrating mid-autumn festival"
+    },
+    {
+        "comments": [],
+        "price": 6.49,
+        "name": "Cheese Burger",
+        "description": "Juicy beef cheese burger"
+    }
+]}
