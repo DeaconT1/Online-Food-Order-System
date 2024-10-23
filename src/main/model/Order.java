@@ -63,7 +63,7 @@ public class Order implements Writable{
     }
 
     // EFFECTS: return true if empty false otherwise;
-    public boolean isEmpty() {
+    public boolean orderisEmpty() {
         return orderedItems.isEmpty();
     }
 

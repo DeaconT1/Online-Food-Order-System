@@ -3,9 +3,17 @@ package ui;
 import model.FoodItem;
 import model.Order;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import persistence.JsonReader;
+import persistence.JsonWriter;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * The QuickBiteApp class provides a console-based interface for interacting
@@ -15,12 +23,19 @@ import java.util.Scanner;
 public class QuickBiteApp {
     private List<FoodItem> menu;      
     private Order currentOrder;       
-    private Scanner scanner;          
+    private Scanner scanner;
+    
+    private static final String JSON_STORE = "./data/order.json";
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
 
-    public QuickBiteApp() {
+    public QuickBiteApp() throws FileNotFoundException {
         initializeMenu();             
         currentOrder = new Order();   
-        scanner = new Scanner(System.in);  
+        scanner = new Scanner(System.in);
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);  
+        run();
     }   
 
     // MODIFIES: this.menu
@@ -65,7 +80,16 @@ public class QuickBiteApp {
                 case "6":
                     placeOrder();
                     break;
-                case "7":               // quit
+                case "7":
+                    addCommentToFoodItem();
+                    break;
+                case "8":
+                    saveOrder();        // save the current order
+                    break;
+                case "9":
+                    loadOrder();        // load the latest order
+                    break;
+                case "10":               // quit
                     System.out.println("Thank you for choosing QuickBite! Goodbye! 👋");
                     keepRunning = false;
                     break;
@@ -84,7 +108,10 @@ public class QuickBiteApp {
         System.out.println("4. Remove Item from Order");
         System.out.println("5. Clear Order");
         System.out.println("6. Place your order");
-        System.out.println("7. Exit");
+        System.out.println("7. Add a comment");
+        System.out.println("8. Save Current Order");  
+        System.out.println("9. Load Previous Order");  
+        System.out.println("10. Exit");
         System.out.print("Please enter your choice: ");
     }
 
@@ -169,4 +196,42 @@ public class QuickBiteApp {
         currentOrder.clearOrder();
     }
 
+    private void addCommentToFoodItem() {
+        displayMenu();  // display the menu first
+        System.out.print("Enter the number of the item you want to comment on: ");
+        int itemNumber = Integer.parseInt(scanner.nextLine()) - 1;
+    
+        if (itemNumber >= 0 && itemNumber < menu.size()) {
+            FoodItem selectedItem = menu.get(itemNumber);  // 获取用户选择的食物项
+            System.out.print("Enter your comment: ");
+            String comment = scanner.nextLine();
+            selectedItem.addComment(comment);  // 添加评论
+            System.out.println("Your comment has been added to " + selectedItem.getName() + "!");
+        } else {
+            System.out.println("Invalid item number.");
+        }
+    }
+    
+    // EFFECTS: saves the workroom to file
+    private void saveOrder() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(currentOrder);
+            jsonWriter.close();
+            System.out.println("Order has been saved to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads workroom from file
+    private void loadOrder() {
+        try {
+            currentOrder = jsonReader.read();
+            System.out.println("Order has been loaded from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
+    }
 }

@@ -1,9 +1,15 @@
 package ui;
 
+import java.io.FileNotFoundException;
+
 public class Main {
     public static void main(String[] args) {
-        QuickBiteApp app = new QuickBiteApp();
-        app.run();
+        try {
+            new QuickBiteApp();
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to run application: file not found");
+        }
+
     
     }
 }

@@ -3,7 +3,11 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FoodItem {
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
+public class FoodItem implements Writable{
     private String name;
     private String description;
     private double price;
@@ -94,5 +98,26 @@ public class FoodItem {
         return comments;
     }
 
-  
+    @Override
+    // EFFECTS: returns this food item as a JSON object
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("description", description);
+        json.put("price", price);
+        json.put("comments", commentsToJson());
+        return json;
+    }
+
+    // EFFECTS: returns the comments as a JSON array
+    private JSONArray commentsToJson() {
+        JSONArray jsonArray = new JSONArray();
+        for (String comment : comments) {
+            jsonArray.put(comment);  
+        }
+        return jsonArray;
+    }
 }
+
+  
+
