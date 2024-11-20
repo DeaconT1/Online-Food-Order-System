@@ -16,6 +16,16 @@ import java.util.Map;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
+
+/**
+ * Constructs a new QuickBiteApp with initialized fields and a welcome page.
+ * Sets up the JFrame properties such as size, layout, and close operation.
+ * 
+ * REQUIRES: None
+ * MODIFIES: this
+ * EFFECTS: Initializes fields and displays the welcome page.
+ *          Sets up the default behavior for closing the application.
+ */
 public class QuickBiteApp extends JFrame {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
@@ -100,6 +110,7 @@ public class QuickBiteApp extends JFrame {
     // MODIFIES: menuPanel, menuList, foodImageLabel, descriptionArea
     // EFFECTS: create the MenuPanel with a BorderLayout(for order and botton layout)
     //          also with the panel displaying the foodItems.
+    @SuppressWarnings("methodlength")
     private void createMenuPanel() {
         menuPanel = new JPanel(new BorderLayout());
         menuPanel.setBorder(BorderFactory.createTitledBorder("Menu"));
@@ -140,6 +151,7 @@ public class QuickBiteApp extends JFrame {
 
     // MODIFIES: welcomPanel, welcomeImage
     // EFFECTS: Sets the layout of the JFrame to BorderLayout and initializes the welcome page.
+    @SuppressWarnings("methodlength")
     private void createWelcomePage() {
         setLayout(new BorderLayout());
         setMinimumSize(new Dimension(WIDTH, HEIGHT));
