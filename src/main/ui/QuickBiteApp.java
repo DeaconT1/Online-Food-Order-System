@@ -57,7 +57,8 @@ public class QuickBiteApp extends JFrame {
         setVisible(true);
     }
 
-    // Initialize the fields
+    // MODIFIES: menu, currentOrder, jsonWriter, jsonReader, orderListModel
+    // EFFECTS: initialieze all the fields.
     private void initializeFields() {
         menu = new ArrayList<>();
         currentOrder = new Order();
@@ -68,7 +69,8 @@ public class QuickBiteApp extends JFrame {
         initializeFoodImages();
     }
 
-    // Initialize the graphics
+    // EFFECTS: set up the panel, including the menuPanel, orderPanel and buttonPanel.
+    //          Remind the customer to save their order when closing the menu panel.
     private void initializeGraphics() {
         setLayout(new BorderLayout(10, 10));
         setMinimumSize(new Dimension(WIDTH, HEIGHT));
@@ -95,18 +97,18 @@ public class QuickBiteApp extends JFrame {
         setVisible(true);
     }
 
-    // Create the menu panel
+    // MODIFIES: menuPanel, menuList, foodImageLabel, descriptionArea
+    // EFFECTS: create the MenuPanel with a BorderLayout(for order and botton layout)
+    //          also with the panel displaying the foodItems.
     private void createMenuPanel() {
         menuPanel = new JPanel(new BorderLayout());
         menuPanel.setBorder(BorderFactory.createTitledBorder("Menu"));
         
-        // Create top panel for list and image
         JPanel topPanel = new JPanel(new BorderLayout());
         
         menuList = new JList<>(getMenuNames());
         menuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
-        // Create and initialize food image label
         foodImageLabel = new JLabel();
         foodImageLabel.setPreferredSize(new Dimension(300, 200));
         foodImageLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -136,21 +138,8 @@ public class QuickBiteApp extends JFrame {
         menuPanel.setPreferredSize(new Dimension(300, HEIGHT));
     }
 
-    // Create the order panel
-    private void createOrderPanel() {
-        orderPanel = new JPanel(new BorderLayout());
-        orderPanel.setBorder(BorderFactory.createTitledBorder("Current Order"));
-        
-        orderList = new JList<>(orderListModel);
-        orderList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        
-        totalLabel = new JLabel("Total: $0.00");
-        
-        orderPanel.add(new JScrollPane(orderList), BorderLayout.CENTER);
-        orderPanel.add(totalLabel, BorderLayout.SOUTH);
-    }
-
-    // Create the welcome page
+    // MODIFIES: welcomPanel, welcomeImage
+    // EFFECTS: Sets the layout of the JFrame to BorderLayout and initializes the welcome page.
     private void createWelcomePage() {
         setLayout(new BorderLayout());
         setMinimumSize(new Dimension(WIDTH, HEIGHT));
@@ -206,7 +195,7 @@ public class QuickBiteApp extends JFrame {
         pack();
     }
 
-    // Switch from welcome page to main menu
+    // EFFECTS: Switch from welcome page to main menu(Removes the existing welcomePanel from the frame)
     private void switchToMainMenu() {
         remove(welcomePanel);
         initializeGraphics();
@@ -215,6 +204,8 @@ public class QuickBiteApp extends JFrame {
         repaint();
     }
 
+    // MODIFIES: foodImageLabel
+    //EFFECTS: create a hashmap to store the image for each certain foodItem.
     private void initializeFoodImages() {
         foodImages = new HashMap<>();
         foodImages.put("MoonCake", new ImageIcon("./data/mooncake.jpg"));
@@ -224,6 +215,7 @@ public class QuickBiteApp extends JFrame {
         foodImages.put("Salad", new ImageIcon("./data/salad.jpg"));
     }
 
+    //EFFECTS: get the foodItem's image.
     private void updateFoodImage(String foodName) {
         ImageIcon icon = foodImages.get(foodName);
         if (icon != null) {
