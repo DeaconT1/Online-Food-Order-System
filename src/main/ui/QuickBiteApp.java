@@ -3,236 +3,235 @@ package ui;
 import model.FoodItem;
 import model.Order;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Map;
 
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-/**
- * The QuickBiteApp class provides a console-based interface for interacting
- * with the ordering system. Users can browse the menu, add items to their order,
- * view their current order, and perform other actions like removing items or clearing the order.
- */
-public class QuickBiteApp {
-    private List<FoodItem> menu;      
-    private Order currentOrder;       
-    private Scanner scanner;
-    
+public class QuickBiteApp extends JFrame {
+    private static final int WIDTH = 800;
+    private static final int HEIGHT = 600;
     private static final String JSON_STORE = "./data/order.json";
+    
+    private List<FoodItem> menu;
+    private Order currentOrder;
+
+
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
 
-    public QuickBiteApp() throws FileNotFoundException {
-        initializeMenu();             
-        currentOrder = new Order();   
-        scanner = new Scanner(System.in);
-        jsonWriter = new JsonWriter(JSON_STORE);
-        jsonReader = new JsonReader(JSON_STORE);  
-        run();
-    }   
 
-    // MODIFIES: this.menu
-    // EFFECTS: Initializes the menu with predefined food items.
-    private void initializeMenu() {
+    private JPanel menuPanel;
+    private JPanel orderPanel;
+    private JPanel buttonPanel;
+    private DefaultListModel<String> orderListModel;
+    private JList<String> orderList;
+    private JTextArea descriptionArea;
+    private JLabel totalLabel;
+    private JList<String> menuList;
+
+    private JPanel welcomePanel;
+    private ImageIcon welcomeImage;
+
+    private boolean isOrderSaved = true;
+
+    private Map<String, ImageIcon> foodImages;
+
+    private JLabel foodImageLabel;
+
+    // EFFECTS: construct a new QuickBiteApp with InitailizeFields(include pannel) and welcomepage
+    public QuickBiteApp() {
+        super("QuickBite Food Ordering System");
+        initializeFields();
+        createWelcomePage();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    // Initialize the fields
+    private void initializeFields() {
         menu = new ArrayList<>();
-        menu.add(new FoodItem("MoonCake", "Traditional Chinese food for celebrating mid-autumn festival", 9.99));
-        menu.add(new FoodItem("Cheese Burger", "Juicy beef cheese burger", 6.49));
-        menu.add(new FoodItem("Sushi", "Fresh salmon sushi", 2.99));
-        menu.add(new FoodItem("Kung Pao Chicken", "Spicy Chinese stir-fry with chicken, peanuts, and chili peppers.", 
-                18.99));
-        menu.add(new FoodItem("Salad", "Fresh garden salad", 5.99));
+        currentOrder = new Order();
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
+        orderListModel = new DefaultListModel<>();
+        initializeMenu();
+        initializeFoodImages();
     }
 
-    // MODIFIES: this.menu
-    // EFFECTS: Initializes the menu with predefined food items.
-    @SuppressWarnings("methodlength")
-    public void run() {
-        System.out.println("\nWelcome to QuickBite! 🍚🍔🍣");
-        boolean keepRunning = true;
-
-        while (keepRunning) {
-            displayMainMenu();          // show the main menu
-            String choice = scanner.nextLine();
-
-            switch (choice) {
-                case "1":               // browse the menu
-                    displayMenu();
-                    break;
-                case "2":               // add the food in menu to the order
-                    addItemToOrder();
-                    break;
-                case "3":               // check the current order
-                    displayOrder();
-                    break;
-                case "4":               // remove item from the current order
-                    removeItemFromOrder();
-                    break;
-                case "5":               // clear the order
-                    clearOrder();
-                    break;
-                case "6":
-                    placeOrder();
-                    break;
-                case "7":
-                    addCommentToFoodItem();
-                    break;
-                case "8":
-                    saveOrder();        // save the current order
-                    break;
-                case "9":
-                    loadOrder();        // load the latest order
-                    break;
-                case "10":               // quit
-                    System.out.println("Thank you for choosing QuickBite! Goodbye! 👋");
-                    keepRunning = false;
-                    break;
-                default:
-                    System.out.println("Invalid input. Please choose a valid option.");
+    // Initialize the graphics
+    private void initializeGraphics() {
+        setLayout(new BorderLayout(10, 10));
+        setMinimumSize(new Dimension(WIDTH, HEIGHT));
+        
+        createMenuPanel();
+        createOrderPanel();
+        createButtonPanel();
+        
+        add(menuPanel, BorderLayout.WEST);
+        add(orderPanel, BorderLayout.CENTER);
+        add(buttonPanel, BorderLayout.SOUTH);
+        
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                saveOrderPrompt();
+                dispose();
             }
-        }
+        });
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        pack();
+        setVisible(true);
     }
 
-    // EFFECTS: Displays the main menu options in the console.
-    private void displayMainMenu() {
-        System.out.println("\nMain Menu:");
-        System.out.println("1. Browse Menu");
-        System.out.println("2. Add Item to Order");
-        System.out.println("3. View Current Order");
-        System.out.println("4. Remove Item from Order");
-        System.out.println("5. Clear Order");
-        System.out.println("6. Place your order");
-        System.out.println("7. Add a comment");
-        System.out.println("8. Save Current Order");  
-        System.out.println("9. Load Previous Order");  
-        System.out.println("10. Exit");
-        System.out.print("Please enter your choice: ");
-    }
-
-    // EFFECTS: Displays all items in the menu along with their description and price.
-    private void displayMenu() {
-        System.out.println("\nMenu:");
-        for (int i = 0; i < menu.size(); i++) {
-            FoodItem item = menu.get(i);
-            System.out.printf("%d. %s - $%.2f\n", (i + 1), item.getName(), item.getPrice()); 
-            System.out.println("   Description: " + item.getDescription());
-        }
-    }
-
-    // REQUIRES: User input must be a valid item number present in the menu.
-    // MODIFIES: this.currentOrder
-    // EFFECTS: Adds the selected food item from the menu to the current order.
-    private void addItemToOrder() {
-        displayMenu();  // this method will first display the menu
-        System.out.print("Enter the number of the item you want to add to your order: ");
-        int itemNumber = Integer.parseInt(scanner.nextLine()) - 1;
-
-        if (itemNumber >= 0 && itemNumber < menu.size()) {
-            FoodItem item = menu.get(itemNumber);
-            currentOrder.addFoodItem(item);
-            System.out.println(item.getName() + " has been added to your order!");
-        } else {
-            System.out.println("Invalid item number.");
-        }
-    }
-
-    // EFFECTS: Displays all items currently in the order along with their description and price. 
-    //          Shows the total cost of the order.  
-    private void displayOrder() {
-        List<FoodItem> orderedItems = currentOrder.getOrderedItems();
-
-        if (orderedItems.isEmpty()) {
-            System.out.println("Your order is currently empty.");
-        } else {
-            System.out.println("\nCurrent Order:");
-            for (int i = 0; i < orderedItems.size(); i++) {
-                FoodItem item = orderedItems.get(i);
-                System.out.printf("%d. %s - $%.2f\n", (i + 1), item.getName(), item.getPrice());
-                System.out.println("   Description: " + item.getDescription());
+    // Create the menu panel
+    private void createMenuPanel() {
+        menuPanel = new JPanel(new BorderLayout());
+        menuPanel.setBorder(BorderFactory.createTitledBorder("Menu"));
+        
+        // Create top panel for list and image
+        JPanel topPanel = new JPanel(new BorderLayout());
+        
+        menuList = new JList<>(getMenuNames());
+        menuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        // Create and initialize food image label
+        foodImageLabel = new JLabel();
+        foodImageLabel.setPreferredSize(new Dimension(300, 200));
+        foodImageLabel.setHorizontalAlignment(JLabel.CENTER);
+        
+        descriptionArea = new JTextArea(4, 20);
+        descriptionArea.setEditable(false);
+        descriptionArea.setLineWrap(true);
+        descriptionArea.setWrapStyleWord(true);
+        
+        menuList.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int index = menuList.getSelectedIndex();
+                if (index >= 0) {
+                    FoodItem selected = menu.get(index);
+                    descriptionArea.setText(selected.getDescription() 
+                            + "\nPrice: $" + String.format("%.2f", selected.getPrice()));
+                    updateFoodImage(selected.getName());
+                }
             }
-            System.out.printf("Total: $%.2f\n", currentOrder.countTotal());
-        }
+        });
+
+        topPanel.add(new JScrollPane(menuList), BorderLayout.WEST);
+        topPanel.add(foodImageLabel, BorderLayout.CENTER);
+        
+        menuPanel.add(topPanel, BorderLayout.CENTER);
+        menuPanel.add(new JScrollPane(descriptionArea), BorderLayout.SOUTH);
+        menuPanel.setPreferredSize(new Dimension(300, HEIGHT));
     }
 
-    // REQUIRES: User input must be a valid item number present in the current order.
-    // MODIFIES: this.currentOrder
-    // EFFECTS: Removes the specified item from the current order.
-    private void removeItemFromOrder() {
-        displayOrder();  // first it will display the current order
-        if (currentOrder.getItemCount() == 0) {
-            return;  // if there's nothing in the current, just return
-        }
+    // Create the order panel
+    private void createOrderPanel() {
+        orderPanel = new JPanel(new BorderLayout());
+        orderPanel.setBorder(BorderFactory.createTitledBorder("Current Order"));
+        
+        orderList = new JList<>(orderListModel);
+        orderList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        totalLabel = new JLabel("Total: $0.00");
+        
+        orderPanel.add(new JScrollPane(orderList), BorderLayout.CENTER);
+        orderPanel.add(totalLabel, BorderLayout.SOUTH);
+    }
 
-        System.out.print("Enter the number of the item you want to remove from your order: ");
-        int itemNumber = Integer.parseInt(scanner.nextLine()) - 1;
-            //get the user's input and convert into a index number 
+    // Create the welcome page
+    private void createWelcomePage() {
+        setLayout(new BorderLayout());
+        setMinimumSize(new Dimension(WIDTH, HEIGHT));
+        
+        welcomePanel = new JPanel(new BorderLayout());
+        welcomeImage = new ImageIcon("./data/QuickBite.png");
+        
+        // Get original image dimensions
+        int originalWidth = welcomeImage.getIconWidth();
+        int originalHeight = welcomeImage.getIconHeight();
+        
+        // Calculate scaling factor to maintain aspect ratio
+        double scaleFactor = Math.min(
+                (double) (WIDTH - 200) / originalWidth,
+                (double) (HEIGHT - 200) / originalHeight
+        );
+        
+        // Scale image maintaining aspect ratio
+        Image img = welcomeImage.getImage();
+        int scaledWidth = (int) (originalWidth * scaleFactor);
+        int scaledHeight = (int) (originalHeight * scaleFactor);
+        Image scaledImg = img.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
+        welcomeImage = new ImageIcon(scaledImg);
+        
+        // Create image label with centered alignment
+        JLabel imageLabel = new JLabel(welcomeImage);
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
+        imageLabel.setVerticalAlignment(JLabel.CENTER);
+        
+        // Create welcome text
+        JLabel welcomeText = new JLabel("Welcome to QuickBite!");
+        welcomeText.setFont(new Font("Arial", Font.BOLD, 24));
+        welcomeText.setHorizontalAlignment(JLabel.CENTER);
+        
+        // Create enter button
+        JButton enterButton = new JButton("Enter");
+        enterButton.setFont(new Font("Arial", Font.PLAIN, 18));
+        enterButton.setPreferredSize(new Dimension(120, 40));
+        enterButton.addActionListener(e -> switchToMainMenu());
+        
+        // Panel for button
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+        buttonPanel.add(enterButton);
+        
+        // Add components to welcome panel
+        welcomePanel.add(welcomeText, BorderLayout.NORTH);
+        welcomePanel.add(imageLabel, BorderLayout.CENTER);
+        welcomePanel.add(buttonPanel, BorderLayout.SOUTH);
+        
+        // Add welcome panel to frame
+        add(welcomePanel);
+        pack();
+    }
 
-        if (itemNumber >= 0 && itemNumber < currentOrder.getItemCount()) {
-            FoodItem item = currentOrder.getOrderedItems().get(itemNumber);
-            currentOrder.removeFoodItem(item);
-            System.out.println(item.getName() + " has been removed from your order!");
+    // Switch from welcome page to main menu
+    private void switchToMainMenu() {
+        remove(welcomePanel);
+        initializeGraphics();
+        loadOrderPrompt();
+        revalidate();
+        repaint();
+    }
+
+    private void initializeFoodImages() {
+        foodImages = new HashMap<>();
+        foodImages.put("MoonCake", new ImageIcon("./data/mooncake.jpg"));
+        foodImages.put("Cheese Burger", new ImageIcon("./data/cheeseburger.jpg"));
+        foodImages.put("Sushi", new ImageIcon("./data/sushi.jpg"));
+        foodImages.put("Kung Pao Chicken", new ImageIcon("./data/kunpaoChicken.jpg"));
+        foodImages.put("Salad", new ImageIcon("./data/salad.jpg"));
+    }
+
+    private void updateFoodImage(String foodName) {
+        ImageIcon icon = foodImages.get(foodName);
+        if (icon != null) {
+            Image img = icon.getImage();
+            Image scaledImg = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+            foodImageLabel.setIcon(new ImageIcon(scaledImg));
         } else {
-            System.out.println("Invalid item number.");
-        }
-    }
-
-    // MODIFIES: this.currentOrder
-    // EFFECTS: Clears all items from the current order.
-    private void clearOrder() {
-        currentOrder.clearOrder();
-        System.out.println("Your order has been cleared.");
-    }
-
-    //MODIFIES: this.currentOrder
-    // EFFECTS: Displays the total amount of the order and clears the current order after placing it.
-    private void placeOrder() {
-        System.out.printf("Your order has been successfully placed! Total amount: $%.2f\n", currentOrder.countTotal());
-        System.out.println("Thank you for your order! Your order is now being prepared. 🍽️");
-        currentOrder.clearOrder();
-    }
-
-    private void addCommentToFoodItem() {
-        displayMenu();  // display the menu first
-        System.out.print("Enter the number of the item you want to comment on: ");
-        int itemNumber = Integer.parseInt(scanner.nextLine()) - 1;
-    
-        if (itemNumber >= 0 && itemNumber < menu.size()) {
-            FoodItem selectedItem = menu.get(itemNumber);  // 获取用户选择的食物项
-            System.out.print("Enter your comment: ");
-            String comment = scanner.nextLine();
-            selectedItem.addComment(comment);  // 添加评论
-            System.out.println("Your comment has been added to " + selectedItem.getName() + "!");
-        } else {
-            System.out.println("Invalid item number.");
-        }
-    }
-    
-    // EFFECTS: saves the workroom to file
-    private void saveOrder() {
-        try {
-            jsonWriter.open();
-            jsonWriter.write(currentOrder);
-            jsonWriter.close();
-            System.out.println("Order has been saved to " + JSON_STORE);
-        } catch (FileNotFoundException e) {
-            System.out.println("Unable to write to file: " + JSON_STORE);
-        }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: loads workroom from file
-    private void loadOrder() {
-        try {
-            currentOrder = jsonReader.read();
-            System.out.println("Order has been loaded from " + JSON_STORE);
-        } catch (IOException e) {
-            System.out.println("Unable to read from file: " + JSON_STORE);
+            foodImageLabel.setIcon(null);
         }
     }
 }
