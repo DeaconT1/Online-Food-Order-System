@@ -1,15 +1,11 @@
 package ui;
 
-import java.io.FileNotFoundException;
+import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        try {
+        SwingUtilities.invokeLater(() -> {
             new QuickBiteApp();
-        } catch (FileNotFoundException e) {
-            System.out.println("Unable to run application: file not found");
-        }
-
-    
+        });
     }
 }
