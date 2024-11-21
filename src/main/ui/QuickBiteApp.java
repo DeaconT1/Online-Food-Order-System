@@ -149,6 +149,184 @@ public class QuickBiteApp extends JFrame {
         menuPanel.setPreferredSize(new Dimension(300, HEIGHT));
     }
 
+    // MODIFIES: this.
+    // EFFECTS: Initializes the menu with predefined food items.
+    private void initializeMenu() {
+        menu.add(new FoodItem("MoonCake", "Traditional Chinese food for celebrating mid-autumn festival", 9.99));
+        menu.add(new FoodItem("Cheese Burger", "Juicy beef cheese burger", 6.49));
+        menu.add(new FoodItem("Sushi", "Fresh salmon sushi", 2.99));
+        menu.add(new FoodItem("Kung Pao Chicken", 
+                "Spicy Chinese stir-fry with chicken, peanuts, and chili peppers.", 18.99));
+        menu.add(new FoodItem("Salad", "Fresh garden salad", 5.99));
+    }
+
+    // EFFECTS: Helper method to get menu item names for JList
+    private DefaultListModel<String> getMenuNames() {
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        for (FoodItem item : menu) {
+            listModel.addElement(item.getName());
+        }
+        return listModel;
+    }
+
+    // EFFECTS: Add selected item to order
+    private void addSelectedItemToOrder() {
+        int selectedIndex = menuList.getSelectedIndex();
+        if (selectedIndex >= 0) {
+            FoodItem selectedItem = menu.get(selectedIndex);
+            currentOrder.addFoodItem(selectedItem);
+            updateOrderList();
+            updateTotal();
+            isOrderSaved = false;  // Order modified, needs saving
+        }
+    }
+
+    // EFFECTS: Remove selected item from order
+    private void removeSelectedItemFromOrder() {
+        int selectedIndex = orderList.getSelectedIndex();
+        if (selectedIndex >= 0) {
+            FoodItem selectedItem = currentOrder.getOrderedItems().get(selectedIndex);
+            currentOrder.removeFoodItem(selectedItem);
+            updateOrderList();
+            updateTotal();
+            isOrderSaved = false;  // Order modified, needs saving
+        }
+    }
+
+    // EFFECTS: Update the order list display
+    private void updateOrderList() {
+        orderListModel.clear();
+        for (FoodItem item : currentOrder.getOrderedItems()) {
+            orderListModel.addElement(item.getName() + " - $" + String.format("%.2f", item.getPrice()));
+        }
+    }
+
+    // EFFECTS: Update the total price display
+    private void updateTotal() {
+        totalLabel.setText("Total: $" + String.format("%.2f", currentOrder.countTotal()));
+    }
+
+    // EFFECTS: Add comment to selected item
+    private void addComment() {
+        int selectedIndex = menuList.getSelectedIndex();
+        if (selectedIndex >= 0) {
+            FoodItem selectedItem = menu.get(selectedIndex);
+            String comment = JOptionPane.showInputDialog(this, "Enter your comment:");
+            if (comment != null && !comment.trim().isEmpty()) {
+                selectedItem.addComment(comment);
+                JOptionPane.showMessageDialog(this, "Comment added successfully!");
+            }
+        }
+    }
+
+    // EFFECTS: Save order to file
+    private void saveOrder() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(currentOrder);
+            jsonWriter.close();
+            isOrderSaved = true;  // Order has been saved
+            JOptionPane.showMessageDialog(this, "Order saved successfully!");
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(this, "Unable to save order: " + e.getMessage(), 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // EFFECTS: Prompt to save order when closing
+    private void saveOrderPrompt() {
+        if (!currentOrder.orderisEmpty() && !isOrderSaved) {
+            int result = JOptionPane.showConfirmDialog(this,
+                    "Would you like to save your order before quitting?",
+                    "Save Order",
+                    JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.YES_OPTION) {
+                saveOrder();
+            }
+        }
+    }   
+
+    // EFFECTS: Load order from file
+    private void loadOrder() {
+        try {
+            currentOrder = jsonReader.read();
+            updateOrderList();
+            updateTotal();
+            JOptionPane.showMessageDialog(this, "Order loaded successfully!");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Unable to load order: " + e.getMessage(), 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            currentOrder = new Order();
+        }
+    }
+
+    // EFFECTS: Prompt to load order when starting
+    private void loadOrderPrompt() {
+        try {
+            Order loadedOrder = jsonReader.read();
+            if (!loadedOrder.orderisEmpty()) {
+                int result = JOptionPane.showConfirmDialog(this,
+                        "Would you like to load your previous order?",
+                        "Load Order",
+                        JOptionPane.YES_NO_OPTION);
+                if (result == JOptionPane.YES_OPTION) {
+                    currentOrder = loadedOrder;
+                    updateOrderList();
+                    updateTotal();
+                } else {
+                    currentOrder = new Order();
+                }
+            }
+        } catch (IOException e) {
+            // If file doesn't exist or can't be read, silently create new order
+            currentOrder = new Order();
+        }
+    }
+
+    // EFFECTS: Place the order and clear it while preserving comments
+    private void placeOrder() {
+        if (!currentOrder.orderisEmpty()) {
+            double total = currentOrder.countTotal();
+            String message = "Order placed successfully!\n\n" 
+                    + "Total amount: $" + String.format("%.2f", total) + "\n" 
+                    + "Your food will be delivered soon. Thank you for choosing QuickBite!";
+            JOptionPane.showMessageDialog(this, message, 
+                    "Order Confirmation", JOptionPane.INFORMATION_MESSAGE);
+            currentOrder.clearOrder();
+            updateOrderList();
+            updateTotal();
+        } else {
+            JOptionPane.showMessageDialog(this, "Your order is empty!", 
+                    "Empty Order", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    // EFFECTS: View comments for selected item
+    private void viewComments() {
+        int selectedIndex = menuList.getSelectedIndex();
+        if (selectedIndex >= 0) {
+            FoodItem selectedItem = menu.get(selectedIndex);
+            List<String> comments = selectedItem.getComments();
+            
+            if (comments.isEmpty()) {
+                JOptionPane.showMessageDialog(this, 
+                        "No comments yet for " + selectedItem.getName(), 
+                        "Comments", 
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                StringBuilder commentText = new StringBuilder();
+                commentText.append("Comments for ").append(selectedItem.getName()).append(":\n\n");
+                for (String comment : comments) {
+                    commentText.append("- ").append(comment).append("\n");
+                }
+                JOptionPane.showMessageDialog(this, 
+                        commentText.toString(), 
+                        "Comments", 
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    }
+
     // MODIFIES: welcomPanel, welcomeImage
     // EFFECTS: Sets the layout of the JFrame to BorderLayout and initializes the welcome page.
     @SuppressWarnings("methodlength")
