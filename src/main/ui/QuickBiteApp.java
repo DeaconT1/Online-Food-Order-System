@@ -196,7 +196,7 @@ public class QuickBiteApp extends JFrame {
         buttonPanel.add(placeOrderButton);
     }
 
-    // MODIFIES: this.
+    // MODIFIES: this
     // EFFECTS: Initializes the menu with predefined food items.
     private void initializeMenu() {
         menu.add(new FoodItem("MoonCake", "Traditional Chinese food for celebrating mid-autumn festival", 9.99));
@@ -216,6 +216,7 @@ public class QuickBiteApp extends JFrame {
         return listModel;
     }
 
+    // REQUIRES: selectedIndex >= 0
     // EFFECTS: Add selected item to order
     private void addSelectedItemToOrder() {
         int selectedIndex = menuList.getSelectedIndex();
@@ -228,6 +229,7 @@ public class QuickBiteApp extends JFrame {
         }
     }
 
+    // REQUIRES: selectedIndex >= 0
     // EFFECTS: Remove selected item from order
     private void removeSelectedItemFromOrder() {
         int selectedIndex = orderList.getSelectedIndex();
@@ -348,6 +350,7 @@ public class QuickBiteApp extends JFrame {
         }
     }
 
+    // REQUIRES: selectedIndex >= 0
     // EFFECTS: View comments for selected item
     private void viewComments() {
         int selectedIndex = menuList.getSelectedIndex();
