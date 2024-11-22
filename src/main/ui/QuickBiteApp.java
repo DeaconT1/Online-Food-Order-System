@@ -149,6 +149,53 @@ public class QuickBiteApp extends JFrame {
         menuPanel.setPreferredSize(new Dimension(300, HEIGHT));
     }
 
+    // MODIFIES: orderPanel, orderList, totalLabel
+    // EFFECTS: build a orderPanel with ordered FoodItem show in the panel and count total price at
+    //          the bottom of the panel
+    private void createOrderPanel() {
+        orderPanel = new JPanel(new BorderLayout());
+        orderPanel.setBorder(BorderFactory.createTitledBorder("Current Order"));
+        
+        orderList = new JList<>(orderListModel);
+        orderList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        totalLabel = new JLabel("Total: $0.00");
+        
+        orderPanel.add(new JScrollPane(orderList), BorderLayout.CENTER);
+        orderPanel.add(totalLabel, BorderLayout.SOUTH);
+    }
+
+    // MODIFEIS: buttonPanel, addButton, removeButton, saveButton, loadButton, commentButton, viewCommentsButton
+    //           placeOrderButton
+    // EFFECTS:  create the buttonPanel with a list of panel in it.
+    private void createButtonPanel() {
+        buttonPanel = new JPanel(new FlowLayout());
+        
+        JButton addButton = new JButton("Add to Order");
+        JButton removeButton = new JButton("Remove from Order");
+        JButton saveButton = new JButton("Save Order");
+        JButton loadButton = new JButton("Load Order");
+        JButton commentButton = new JButton("Add Comment");
+        JButton viewCommentsButton = new JButton("View Comments");
+        JButton placeOrderButton = new JButton("Place Order");
+        
+        addButton.addActionListener(e -> addSelectedItemToOrder());
+        removeButton.addActionListener(e -> removeSelectedItemFromOrder());
+        saveButton.addActionListener(e -> saveOrder());
+        loadButton.addActionListener(e -> loadOrder());
+        commentButton.addActionListener(e -> addComment());
+        viewCommentsButton.addActionListener(e -> viewComments());
+        placeOrderButton.addActionListener(e -> placeOrder());
+        
+        buttonPanel.add(addButton);
+        buttonPanel.add(removeButton);
+        buttonPanel.add(commentButton);
+        buttonPanel.add(viewCommentsButton);
+        buttonPanel.add(saveButton);
+        buttonPanel.add(loadButton);
+        buttonPanel.add(placeOrderButton);
+    }
+
     // MODIFIES: this.
     // EFFECTS: Initializes the menu with predefined food items.
     private void initializeMenu() {
