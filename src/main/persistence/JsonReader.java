@@ -77,7 +77,7 @@ public class JsonReader {
             foodItem.addComment(comment);  
         }
 
-        order.addFoodItem(foodItem);
+        order.addFoodItemWithoutLogging(foodItem);
     }
 }
  

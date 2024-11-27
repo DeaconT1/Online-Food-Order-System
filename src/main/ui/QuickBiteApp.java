@@ -1,5 +1,7 @@
 package ui;
 
+import model.Event;
+import model.EventLog;
 import model.FoodItem;
 import model.Order;
 
@@ -60,9 +62,19 @@ public class QuickBiteApp extends JFrame {
     // EFFECTS: construct a new QuickBiteApp with InitailizeFields(include pannel) and welcomepage
     public QuickBiteApp() {
         super("QuickBite Food Ordering System");
+        EventLog.getInstance().clear();  // Clear any previous events
         initializeFields();
         createWelcomePage();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        // Add window listener to handle closing events
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                handleClosing();
+            }
+        });
+        
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
     }
@@ -466,4 +478,17 @@ public class QuickBiteApp extends JFrame {
             foodImageLabel.setIcon(null);
         }
     }
+
+    private void handleClosing() {
+        saveOrderPrompt();
+        
+        // Print all events that occurred during this session
+        for (Event event : EventLog.getInstance()) {
+            System.out.println(event.toString() + "\n");
+        }
+        
+        dispose();
+        System.exit(0);
+    }
+
 }

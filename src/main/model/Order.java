@@ -20,6 +20,14 @@ public class Order implements Writable {
     // EFFECTS: add foodItem to the ordered list
     public void addFoodItem(FoodItem item) {
         this.orderedItems.add(item);
+        EventLog.getInstance().logEvent(new Event(item.getName() + " is successfully added!"));
+    }
+    
+    // REQUIRES: item != null
+    // MODIFIES: this
+    // EFFECTS: add foodItem to the ordered list without logging event
+    public void addFoodItemWithoutLogging(FoodItem item) {
+        this.orderedItems.add(item);
     }
 
     // REQUIRES: item != null && !orderedItems.isEmpty() && item in orderedItems
@@ -27,6 +35,7 @@ public class Order implements Writable {
     // EFFECTS: remove foodItem in the ordered list
     public void removeFoodItem(FoodItem item) {
         this.orderedItems.remove(item);
+        EventLog.getInstance().logEvent(new Event(item.getName() + " is successfully removed!"));
     }
 
     // EFFECTS: return a copy of the orderedItems
@@ -84,5 +93,7 @@ public class Order implements Writable {
 
         return jsonArray;
     }
+
+
 
 }
