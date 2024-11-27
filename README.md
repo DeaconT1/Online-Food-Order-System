@@ -31,3 +31,9 @@ It addresses a real-world problem that many people, including myself, encounter 
 - `X` is the `FoodItem`, including its name, description, price, image and comments.
 - `Y` is the `Order`, have the list of `FoodItem`, we can add, view, remove, calculate the total price of current food items in it.
 
+
+## Phase4: Task3 (refactoring):
+- The QuickBiteApp is handling too many responsibilities, GUI, all adding and remove event. Also I have instantiated at least three panels (menu, order, welcome-page) here. 
+- **Refactoring**: I should extract panels into separate classes.
+- After learning the **Observer Pattern** in lecture, I found the possible to use it in my project! When a `FoodItem` is added to the `Order`, obeserve this change and updating the UI rather than using direct method calls. 
+- **Refactorying**: First, create an `Observer` interface, then modify the `Order` Class by adding and removing Obeserver methods, also `notifyObservers`. After that, let the `QuickBiteApp` implement the `Observer`, add method like `updateOrderList()` and `updateTotal()` for instance. After all, add `notifyObservers()` after the `addFoodItem` and `removeFoodItem`, the Obeserver Pattern realized. It reduce the duplication of method calls and make the behaviour of changing order more clearly.
