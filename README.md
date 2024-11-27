@@ -32,6 +32,19 @@ It addresses a real-world problem that many people, including myself, encounter 
 - `Y` is the `Order`, have the list of `FoodItem`, we can add, view, remove, calculate the total price of current food items in it.
 
 
+## Phase4 : Task2 (representative sample)
+- Wed Nov 27 14:21:15 PST 2024
+Sushi is successfully added!
+
+- Wed Nov 27 14:21:17 PST 2024
+Kung Pao Chicken is successfully added!
+
+- Wed Nov 27 14:21:23 PST 2024
+Salad is successfully removed!
+
+- **These three event will be printed in the console when I quit the application and did the following steps in my last running application: click on the Sushi in the menu and press the `add to order` botton, click on the Kung Pao Chicken in the menu and press the `add to order` botton, click on the Salad on the order(it was loaded from the previous saved order) and press the `remove from order botton`.**
+
+
 ## Phase4: Task3 (refactoring):
 - The QuickBiteApp is handling too many responsibilities, GUI, all adding and remove event. Also I have instantiated at least three panels (menu, order, welcome-page) here. 
 - **Refactoring**: I should extract panels into separate classes.
