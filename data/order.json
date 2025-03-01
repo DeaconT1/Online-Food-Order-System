@@ -1,1 +1,38 @@
-{"orderedItems": []}
+{"orderedItems": [
+    {
+        "comments": [],
+        "price": 9.99,
+        "name": "MoonCake",
+        "description": "Traditional Chinese food for celebrating mid-autumn festival"
+    },
+    {
+        "comments": [],
+        "price": 5.99,
+        "name": "Salad",
+        "description": "Fresh garden salad"
+    },
+    {
+        "comments": [],
+        "price": 2.99,
+        "name": "Sushi",
+        "description": "Fresh salmon sushi"
+    },
+    {
+        "comments": [],
+        "price": 18.99,
+        "name": "Kung Pao Chicken",
+        "description": "Spicy Chinese stir-fry with chicken, peanuts, and chili peppers."
+    },
+    {
+        "comments": [],
+        "price": 2.99,
+        "name": "Sushi",
+        "description": "Fresh salmon sushi"
+    },
+    {
+        "comments": [],
+        "price": 18.99,
+        "name": "Kung Pao Chicken",
+        "description": "Spicy Chinese stir-fry with chicken, peanuts, and chili peppers."
+    }
+]}
